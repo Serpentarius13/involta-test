@@ -1,14 +1,15 @@
 <template>
   <ul
-    class="flex flex-col gap-[1rem] w-full max-h-full overflow-y-auto"
-    id="messagesList"
+    :id="LIST_ID"
+    class="w-full flex flex-col gap-[1rem] max-h-full overflow-y-auto"
   >
+    <MessagesLoader />
     <li
       v-for="message in store.messages"
       :key="getMessage(message)"
       :class="[
         typeof message !== 'string' && message.mine ? 'self-end' : '',
-        'p-[1rem] rounded-xl bg-white border-[1px] border-black max-w-[50%] break-words',
+        'p-[1rem] rounded-xl bg-white border-[1px] border-black max-w-[50%] break-words ',
       ]"
     >
       {{ getMessage(message) }}
@@ -17,13 +18,17 @@
 </template>
 
 <script setup lang="ts">
-import { TMessage } from "@/components/shared/types/message.types";
 import { useMessengerStore } from "../../model/useMessengerStore";
+
+import { LIST_ID } from "../../model/useMessengerStore";
+
+import { TMessage } from "@/components/shared/types/message.types";
+import MessagesLoader from "./MessagesLoader.vue";
 
 const store = useMessengerStore();
 
-const getMessage = (message: TMessage) =>
-  typeof message === "string" ? message : message.message;
+const getMessage = (msg: TMessage): string =>
+  typeof msg === "string" ? msg : msg.message;
 </script>
 
 <style scoped lang="scss"></style>

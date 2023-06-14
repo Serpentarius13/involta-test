@@ -12,11 +12,11 @@ export const getMessages = async (offset: number) => {
 
   const textData = await response.text();
 
-  if (textData.length < 100) {
+  try {
+    const data = JSON.parse(textData);
+
+    return data.result as TMessage[];
+  } catch (error) {
     throw new Error(textData);
   }
-
-  const data = JSON.parse(textData);
-
-  return data.result as TMessage[];
 };

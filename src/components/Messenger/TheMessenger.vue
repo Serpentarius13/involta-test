@@ -9,16 +9,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useMessengerStore } from "./model/useMessengerStore";
 import TheMessages from "./ui/Messages/TheMessages.vue";
 import SendMessage from "./ui/SendMessage/SendMessage.vue";
 import MessagesError from "./ui/Messages/MessagesError.vue";
+import { onMounted } from "vue";
 
 const store = useMessengerStore();
 
 onMounted(() => {
-  store.loadMessages().then(() => store.scrollToBottom());
+  store.loadMessages();
 });
 </script>
 

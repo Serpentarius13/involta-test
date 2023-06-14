@@ -5,11 +5,15 @@ import { useToast } from "vue-toastification";
 
 export const PAGE_LIMIT = 20;
 
+export const LIST_ID = "messagesList";
+
 interface IStore {
   messages: TMessage[];
   loading: boolean;
   error: string | null;
   currentPage: number;
+  noMessagesLeft: boolean;
+  hasInitiallyLoaded: boolean;
 }
 
 export const useMessengerStore = defineStore("messenger-store", {
@@ -17,26 +21,68 @@ export const useMessengerStore = defineStore("messenger-store", {
     messages: [],
     loading: false,
     error: null,
-    currentPage: 1,
+    currentPage: 0,
+    noMessagesLeft: false,
+    hasInitiallyLoaded: false,
   }),
   actions: {
     async loadMessages() {
+      if (this.noMessagesLeft || this.loading) return;
+
+      // выставляем isLoading
+      this.load();
+
+      // очищаем ошибки
+      this.clearError();
+
+      // увеличиваем текущую страницу
+      this.increasePage();
+
+      // высчитываем оффсет
       const page = this.currentPage - 1;
 
       const offset = page * PAGE_LIMIT;
 
       try {
+        // гетаем сообщения с оффсетом
         const messages = await getMessages(offset);
 
-        console.log(messages);
+        // если их нет, сообщения кончились
+        if (messages.length === 0) {
+          return (this.noMessagesLeft = true);
+        }
 
+        // переворачиваем массив сообщений, чтобы показывать их в обратном порядке.
+        //? альтернативой было бы использовать column-reverse в css, но тогда мне бы пришлось добавлять новые сообщения в начало списка, а это O(n)
+        //? мне показалось это лучшим вариантом, но не совсем уверен
         messages.reverse();
 
+        // Высчитываем, изначальная ли это подгрузка
+        const isInitial = this.messages.length === 0;
+
         this.messages = [...messages, ...this.messages];
+
+        if (isInitial) {
+          this.hasInitiallyLoaded = true;
+
+          this.scrollToBottom();
+        }
       } catch (error: any) {
-        const toast = useToast();
-        toast.error(error?.message);
-        this.error = error;
+        // Если не удалось загрузить сообщения, понижаем страницу
+        this.decreasePage();
+
+        // Если ничего не было подгружено, пробуем еще раз
+        if (!this.hasInitiallyLoaded) {
+          this.loadMessages();
+        } else {
+          // Иначе выдаем ошибку и выставляем ее в стейт
+          const toast = useToast();
+          toast.error(error?.message);
+          this.setError(error?.message);
+        }
+      } finally {
+        // Выключаем загрузку
+        this.unload();
       }
     },
 
@@ -49,7 +95,7 @@ export const useMessengerStore = defineStore("messenger-store", {
     },
 
     scrollToBottom() {
-      const list = document.getElementById("messagesList");
+      const list = document.getElementById(LIST_ID);
 
       console.log(list);
       if (!list) return;
@@ -57,6 +103,14 @@ export const useMessengerStore = defineStore("messenger-store", {
       setTimeout(() => {
         list.scrollTop = list.scrollHeight;
       }, 10);
+    },
+
+    increasePage() {
+      this.currentPage++;
+    },
+
+    decreasePage() {
+      if (this.currentPage > 0) this.currentPage--;
     },
 
     load() {
