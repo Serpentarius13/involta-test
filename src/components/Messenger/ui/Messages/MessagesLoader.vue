@@ -8,7 +8,7 @@
 import { ref } from "vue";
 
 import { useMessengerStore } from "../../model/useMessengerStore";
-import { useIntersectionObserver } from "@/components/shared/lib/hooks/useIntersectionObserver";
+import { useIntersectionObserver } from "@/shared/lib/hooks/useIntersectionObserver";
 
 const messageLoader = ref<HTMLElement | null>();
 

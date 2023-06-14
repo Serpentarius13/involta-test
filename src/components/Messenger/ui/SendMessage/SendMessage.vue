@@ -9,11 +9,11 @@
 </template>
 
 <script setup lang="ts">
-import TextInput from "@/components/shared/ui/Input/TextInput.vue";
+import TextInput from "@/shared/ui/Input/TextInput.vue";
 import { ref } from "vue";
 import { useMessengerStore } from "../../model/useMessengerStore";
 
-import LoadingButton from "@/components/shared/ui/Button/LoadingButton.vue";
+import LoadingButton from "@/shared/ui/Button/LoadingButton.vue";
 import { useToast } from "vue-toastification";
 
 const messageText = ref<string>("");

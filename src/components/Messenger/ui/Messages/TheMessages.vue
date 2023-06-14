@@ -22,7 +22,7 @@ import { useMessengerStore } from "../../model/useMessengerStore";
 
 import { LIST_ID } from "../../model/useMessengerStore";
 
-import { TMessage } from "@/components/shared/types/message.types";
+import { TMessage } from "@/shared/types/message.types";
 import MessagesLoader from "./MessagesLoader.vue";
 
 const store = useMessengerStore();

@@ -1,5 +1,5 @@
-import { baseURL } from "@/components/shared/api/baseURL";
-import { TMessage } from "@/components/shared/types/message.types";
+import { baseURL } from "@/shared/api/baseURL";
+import { TMessage } from "@/shared/types/message.types";
 
 export const getMessages = async (offset: number) => {
   let path = `${baseURL}/getMessages`;

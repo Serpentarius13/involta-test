@@ -1,4 +1,4 @@
-import { TMessage } from "@/components/shared/types/message.types";
+import { TMessage } from "@/shared/types/message.types";
 import { defineStore } from "pinia";
 import { getMessages } from "../api/getMessages";
 import { useToast } from "vue-toastification";
@@ -52,9 +52,9 @@ export const useMessengerStore = defineStore("messenger-store", {
           return (this.noMessagesLeft = true);
         }
 
-        // переворачиваем массив сообщений, чтобы показывать их в обратном порядке.
-        //? альтернативой было бы использовать column-reverse в css, но тогда мне бы пришлось добавлять новые сообщения в начало списка, а это O(n)
-        //? мне показалось это лучшим вариантом, но не совсем уверен
+        // Переворачиваем массив с данными чтобы показывать их сверху вниз
+        //? Принял такое решение потому что в ином случае мне пришлось бы использовать unshift на массив, что стоит O(n) операций
+        //? Показалось что лучше сделать именно так, но могу ошибаться
         messages.reverse();
 
         // Высчитываем, изначальная ли это подгрузка
@@ -71,8 +71,11 @@ export const useMessengerStore = defineStore("messenger-store", {
         // Если не удалось загрузить сообщения, понижаем страницу
         this.decreasePage();
 
+        console.log("error");
+
         // Если ничего не было подгружено, пробуем еще раз
         if (!this.hasInitiallyLoaded) {
+          this.unload();
           this.loadMessages();
         } else {
           // Иначе выдаем ошибку и выставляем ее в стейт
