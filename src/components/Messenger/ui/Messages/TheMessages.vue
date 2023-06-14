@@ -1,7 +1,7 @@
 <template>
   <ul
     :id="LIST_ID"
-    class="w-full flex flex-col gap-[1rem] max-h-full overflow-y-auto"
+    class="w-full flex flex-col gap-[1rem] max-h-full overflow-y-auto p-[1rem]"
   >
     <MessagesLoader />
     <li
