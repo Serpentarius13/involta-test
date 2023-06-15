@@ -13,6 +13,7 @@ import { useIntersectionObserver } from "@/shared/lib/hooks/useIntersectionObser
 const messageLoader = ref<HTMLElement | null>();
 
 const store = useMessengerStore();
+
 useIntersectionObserver(messageLoader, store.loadMessages);
 </script>
 

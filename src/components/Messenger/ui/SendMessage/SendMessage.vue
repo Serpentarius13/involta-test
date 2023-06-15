@@ -16,6 +16,12 @@ import { useMessengerStore } from "../../model/useMessengerStore";
 import LoadingButton from "@/shared/ui/Button/LoadingButton.vue";
 import { useToast } from "vue-toastification";
 
+interface IAddMessage {
+  handleScroll: () => void;
+}
+
+const props = defineProps<IAddMessage>();
+
 const messageText = ref<string>("");
 
 const store = useMessengerStore();
@@ -25,6 +31,7 @@ const toast = useToast();
 function sendMessage() {
   if (messageText.value) {
     store.sendMessage(messageText.value);
+    props.handleScroll();
     messageText.value = "";
   } else {
     toast.warning("Введите сообщение");

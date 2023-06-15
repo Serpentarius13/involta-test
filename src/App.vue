@@ -1,6 +1,6 @@
 <template>
   <div class="w-screen h-screen flex items-center justify-center">
-    <main class="w-[80ch] max-w-screen mx-auto h-[90vh]">
+    <main class="w-[80ch] max-w-[95vw] mx-auto lg:h-[90vh] h-screen ">
       <TheMessenger />
     </main>
   </div>

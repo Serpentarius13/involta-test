@@ -5,8 +5,6 @@ import { useToast } from "vue-toastification";
 
 export const PAGE_LIMIT = 20;
 
-export const LIST_ID = "messagesList";
-
 interface IStore {
   messages: TMessage[];
   loading: boolean;
@@ -64,8 +62,6 @@ export const useMessengerStore = defineStore("messenger-store", {
 
         if (isInitial) {
           this.hasInitiallyLoaded = true;
-
-          this.scrollToBottom();
         }
       } catch (error: any) {
         // Если не удалось загрузить сообщения, понижаем страницу
@@ -93,19 +89,6 @@ export const useMessengerStore = defineStore("messenger-store", {
       const message: TMessage = { mine: true, message: text };
 
       this.messages.push(message);
-
-      this.scrollToBottom();
-    },
-
-    scrollToBottom() {
-      const list = document.getElementById(LIST_ID);
-
-      console.log(list);
-      if (!list) return;
-
-      setTimeout(() => {
-        list.scrollTop = list.scrollHeight;
-      }, 10);
     },
 
     increasePage() {
@@ -135,6 +118,10 @@ export const useMessengerStore = defineStore("messenger-store", {
     },
     isLoading(state) {
       return state.loading;
+    },
+
+    offset(state) {
+      return state.currentPage * PAGE_LIMIT;
     },
   },
 });
